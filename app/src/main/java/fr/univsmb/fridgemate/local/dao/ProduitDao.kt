@@ -17,7 +17,7 @@ interface ProduitDao {
     fun getAllProduits() : Flow<List<ProduitEntity>>
 
     @Query("SELECT * FROM  produit WHERE code = :code LIMIT 1")
-    suspend fun getProduitByCode(code:String): ProduitModel?
+    suspend fun getProduitByCode(code:String): ProduitEntity?
 
     @Upsert
     suspend fun upsertProduit(produit: ProduitEntity)
