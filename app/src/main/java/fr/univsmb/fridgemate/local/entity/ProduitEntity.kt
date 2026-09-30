@@ -45,7 +45,7 @@ data class ProduitEntity(
     companion object {
         fun FromProduitModel (produit: ProduitModel): ProduitEntity {
             return ProduitEntity(
-                code = produit.code,
+                code = produit.code, // osome code
                 nom = produit.nom,
                 marque = produit.marque,
                 categorie = produit.categorie,
