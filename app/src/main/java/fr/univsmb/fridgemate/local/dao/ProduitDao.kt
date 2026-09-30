@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
 import fr.univsmb.fridgemate.local.entity.ProduitEntity
+import fr.univsmb.fridgemate.model.ProduitModel
 
 import kotlinx.coroutines.flow.Flow
 
@@ -16,7 +17,7 @@ interface ProduitDao {
     fun getAllProduits() : Flow<List<ProduitEntity>>
 
     @Query("SELECT * FROM  produit WHERE code = :code LIMIT 1")
-    suspend fun getProduitByCode(code:String): ProduitEntity?
+    suspend fun getProduitByCode(code:String): ProduitModel?
 
     @Upsert
     suspend fun upsertProduit(produit: ProduitEntity)
