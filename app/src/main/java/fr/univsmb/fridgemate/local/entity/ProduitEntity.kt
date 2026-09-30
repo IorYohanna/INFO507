@@ -19,8 +19,8 @@ data class ProduitEntity(
     @ColumnInfo("image_url") val image_url: String?,
     @ColumnInfo("quantite") val quantite: Int,
     @ColumnInfo("unite") val unite: Unite,
-    @ColumnInfo("date_ajout") val date_ajout: Date,
-    @ColumnInfo("date_expiration") val date_expiration: Date,
+    @ColumnInfo("date_ajout") val date_ajout: String,
+    @ColumnInfo("date_expiration") val date_expiration: String,
     @ColumnInfo("statut") val statut: Statut,
     @ColumnInfo("notifie") val notifie: Boolean
 ) {
@@ -53,8 +53,8 @@ data class ProduitEntity(
                 unite = produit.unite,
                 nutriscore = produit.nutriscore,
                 image_url = produit.image_url,
-                date_ajout = produit.date_ajout,
-                date_expiration = produit.date_expiration,
+                date_ajout = produit.date_ajout.toString(),
+                date_expiration = produit.date_expiration.toString(),
                 statut = produit.statut,
                 notifie = produit.notifie
             )

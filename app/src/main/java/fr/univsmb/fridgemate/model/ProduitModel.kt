@@ -13,8 +13,8 @@ data class ProduitModel (
     val unite : Unite,
     val nutriscore : Nutriscore,
     val image_url : String?,
-    val date_ajout : Date,
-    val date_expiration : Date,
+    val date_ajout : String,
+    val date_expiration : String,
     val statut : Statut,
     val notifie : Boolean
 )
