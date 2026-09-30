@@ -2,50 +2,61 @@ package fr.univsmb.fridgemate.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import fr.univsmb.fridgemate.local.model.ProduitModel
+import fr.univsmb.fridgemate.domain.data.Nutriscore
+import fr.univsmb.fridgemate.domain.data.Statut
+import fr.univsmb.fridgemate.domain.data.Unite
+import fr.univsmb.fridgemate.model.ProduitModel
+import java.util.Date
+import kotlin.String
 
-
-@Entity(tableName = "aliment")
+@Entity(tableName = "produit")
 data class ProduitEntity(
-    @PrimaryKey @ColumnInfo("barcode") val barcode: String,
+    @PrimaryKey @ColumnInfo("code") val code: String,
     @ColumnInfo("nom") val nom: String,
+    @ColumnInfo("nutriscore") val nutriscore: Nutriscore,
     @ColumnInfo("marque") val marque: String?,
     @ColumnInfo("categorie") val categorie: String?,
-    @ColumnInfo("image_url") val imageUrl: String?,
-    @ColumnInfo("quantite_stock") val quantiteStock: Double,
-    @ColumnInfo("unite") val unite: String,
-    @ColumnInfo("date_ajout") val dateAjout: Long,
-    @ColumnInfo("date_expiration") val dateExpiration: Long,
+    @ColumnInfo("image_url") val image_url: String?,
+    @ColumnInfo("quantite") val quantite: Int,
+    @ColumnInfo("unite") val unite: Unite,
+    @ColumnInfo("date_ajout") val date_ajout: Date,
+    @ColumnInfo("date_expiration") val date_expiration: Date,
+    @ColumnInfo("statut") val statut: Statut,
     @ColumnInfo("notifie") val notifie: Boolean
 ) {
-    fun toAliment(): ProduitModel {
+    fun toProduitModel(): ProduitModel {
         return ProduitModel(
-            barcode = barcode,
+            code = code,
             nom = nom,
             marque = marque,
             categorie = categorie,
-            imageUrl = imageUrl,
-            quantiteStock = quantiteStock,
+            quantite = quantite,
             unite = unite,
-            dateAjout = dateAjout,
-            dateExpiration = dateExpiration,
+            nutriscore = nutriscore,
+            image_url = image_url,
+            date_ajout = date_ajout,
+            date_expiration = date_expiration,
+            statut = statut,
             notifie = notifie
+
         )
     }
 
     companion object {
-        fun FromProduitModel (aliment: ProduitModel): ProduitEntity {
+        fun FromProduitModel (produit: ProduitModel): ProduitEntity {
             return ProduitEntity(
-                barcode = aliment.barcode,
-                nom = aliment.nom,
-                marque = aliment.marque,
-                categorie = aliment.categorie,
-                imageUrl = aliment.imageUrl,
-                quantiteStock = aliment.quantiteStock,
-                unite = aliment.unite,
-                dateAjout = aliment.dateAjout,
-                dateExpiration = aliment.dateExpiration,
-                notifie = aliment.notifie
+                code = produit.code,
+                nom = produit.nom,
+                marque = produit.marque,
+                categorie = produit.categorie,
+                quantite = produit.quantite,
+                unite = produit.unite,
+                nutriscore = produit.nutriscore,
+                image_url = produit.image_url,
+                date_ajout = produit.date_ajout,
+                date_expiration = produit.date_expiration,
+                statut = produit.statut,
+                notifie = produit.notifie
             )
         }
     }
