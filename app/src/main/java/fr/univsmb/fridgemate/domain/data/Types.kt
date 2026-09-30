@@ -5,7 +5,7 @@ enum class Nutriscore(val raw : String) {
     B("B"),
     C("C"),
     D("D"),
-    E("E") //9
+    E("E") //955
 }
 
 enum class Statut(val raw : String) {
