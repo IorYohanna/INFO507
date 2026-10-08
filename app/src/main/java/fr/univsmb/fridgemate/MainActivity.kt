@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.univsmb.fridgemate.domain.usecase.FetchProductInfoUseCase
 import fr.univsmb.fridgemate.repository.OpenFoodFactRepository
+import fr.univsmb.fridgemate.ui.FridgeScreen
 import fr.univsmb.fridgemate.ui.theme.FridgeMateTheme
 import kotlinx.coroutines.launch
 
@@ -34,54 +35,54 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FridgeMateTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    TestApiScreen(modifier = Modifier.padding(innerPadding))
-                }
+                FridgeScreen(modifier = Modifier.padding(horizontal = 50.dp, vertical = 50.dp))
             }
         }
     }
-}
 
-@Composable
-fun TestApiScreen(modifier: Modifier = Modifier) {
-    val fetchInfo = remember { FetchProductInfoUseCase(OpenFoodFactRepository()) }
-    val scope = rememberCoroutineScope()
+    @Composable
+    fun TestApiScreen(modifier: Modifier = Modifier) {
+        val fetchInfo = remember { FetchProductInfoUseCase(OpenFoodFactRepository()) }
+        val scope = rememberCoroutineScope()
 
-    var code by remember { mutableStateOf("3017620422003") }   // Nutella
-    var resultat by remember { mutableStateOf("Aucun appel pour l'instant") }
-    var loading by remember { mutableStateOf(false) }
+        var code by remember { mutableStateOf("3017620422003") }   // Nutella
+        var resultat by remember { mutableStateOf("Aucun appel pour l'instant") }
+        var loading by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        OutlinedTextField(
-            value = code,
-            onValueChange = { code = it },
-            label = { Text("Code-barres") },
-            singleLine = true
-        )
-
-        Button(
-            enabled = !loading,
-            onClick = {
-                scope.launch {
-                    loading = true
-                    val res = fetchInfo(code.trim())
-                    Log.d("FridgeMate", "OFF : $res")
-                    resultat = res.fold(
-                        onSuccess = { info -> info?.toString() ?: "Produit introuvable (null)" },
-                        onFailure = { "Erreur : ${it::class.simpleName} - ${it.message}" }
-                    )
-                    loading = false
-                }
-            }
+        Column(
+            modifier = modifier
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(if (loading) "Chargement..." else "Tester l'API")
-        }
+            OutlinedTextField(
+                value = code,
+                onValueChange = { code = it },
+                label = { Text("Code-barres") },
+                singleLine = true
+            )
 
-        Text(resultat)
+            Button(
+                enabled = !loading,
+                onClick = {
+                    scope.launch {
+                        loading = true
+                        val res = fetchInfo(code.trim())
+                        Log.d("FridgeMate", "OFF : $res")
+                        resultat = res.fold(
+                            onSuccess = { info ->
+                                info?.toString() ?: "Produit introuvable (null)"
+                            },
+                            onFailure = { "Erreur : ${it::class.simpleName} - ${it.message}" }
+                        )
+                        loading = false
+                    }
+                }
+            ) {
+                Text(if (loading) "Chargement..." else "Tester l'API")
+            }
+
+            Text(resultat)
+        }
     }
 }

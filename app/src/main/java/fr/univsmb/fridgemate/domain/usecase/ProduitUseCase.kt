@@ -1,5 +1,6 @@
     package fr.univsmb.fridgemate.domain.usecase
 
+    import android.util.Log
     import fr.univsmb.fridgemate.remote.dto.OpenFoodFactsInfo
     import fr.univsmb.fridgemate.model.ProduitModel
     import fr.univsmb.fridgemate.repository.OpenFoodFactRepository
@@ -43,6 +44,7 @@
     ) {
         suspend operator fun invoke(produit: ProduitModel) {
             repository.upsertProduit(produit)
+            Log.d("Room", "ajouter avec succes")
         }
     }
 
@@ -52,4 +54,20 @@
         suspend operator fun invoke(code: String): Result<OpenFoodFactsInfo?> {
             return repository.fetchProduit(code)
         }
+    }
+
+    class AddOrIncrementProductUseCase(private val repository: ProduitRepository) {
+        suspend operator fun invoke(produit: ProduitModel) = repository.ajouterOuIncrementer(produit)
+    }
+
+    class ConsumeOneProductUseCase(private val repository: ProduitRepository) {
+        suspend operator fun invoke(code: String) = repository.consommerUn(code)
+    }
+
+    class GetProductsToNotifyUseCase(private val repository: ProduitRepository) {
+        suspend operator fun invoke(limite: String) = repository.getProduitsANotifier(limite)
+    }
+
+    class MarkNotifiedUseCase(private val repository: ProduitRepository) {
+        suspend operator fun invoke(code: String) = repository.marquerNotifie(code)
     }

@@ -1,6 +1,7 @@
 package fr.univsmb.fridgemate.local
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -32,5 +33,6 @@ object ProduitDatabaseHolder {
 
     fun initialize(context: Context) {
         database = ProduitDatabase.get(context)
+        Log.d("Room", database.toString())
     }
 }

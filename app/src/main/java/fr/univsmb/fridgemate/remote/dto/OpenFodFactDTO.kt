@@ -30,13 +30,12 @@ data class OpenFoodFactsProductDto(
     val quantity: String? = null
 )
 
-fun OpenFoodFactsProductDto.toProduitInfo(code: String) = OpenFoodFactsInfo(
+fun OpenFoodFactsProductDto.toOpenFoodFactsInfo(code: String) = OpenFoodFactsInfo(
     code = code,
     nom = productName?.takeIf { it.isNotBlank() } ?: "Produit inconnu",
     marque = brands?.substringBefore(",")?.trim(),
     categorie = categoriesTags?.firstOrNull { !it.contains(":") },
     imageUrl = imageUrl,
-    quantity = quantity,
     nutriscore = when (nutriscoreGrade?.lowercase()) {
         "a" -> Nutriscore.A
         "b" -> Nutriscore.B
@@ -44,5 +43,6 @@ fun OpenFoodFactsProductDto.toProduitInfo(code: String) = OpenFoodFactsInfo(
         "d" -> Nutriscore.D
         "e" -> Nutriscore.E
         else -> Nutriscore.UNKOWN
-    }
+    },
+    quantity = quantity
 )

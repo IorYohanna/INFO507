@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "fr.univsmb.fridgemate"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -65,4 +65,5 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.okhttp)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 }
