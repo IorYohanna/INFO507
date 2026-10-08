@@ -1,6 +1,6 @@
     package fr.univsmb.fridgemate.domain.usecase
 
-    import fr.univsmb.fridgemate.model.ProduitInfo
+    import fr.univsmb.fridgemate.remote.dto.OpenFoodFactsInfo
     import fr.univsmb.fridgemate.model.ProduitModel
     import fr.univsmb.fridgemate.repository.OpenFoodFactRepository
     import fr.univsmb.fridgemate.repository.ProduitRepository
@@ -49,7 +49,7 @@
     class FetchProductInfoUseCase(
         private val repository: OpenFoodFactRepository
     ) {
-        suspend operator fun invoke(code: String): Result<ProduitInfo?> {
+        suspend operator fun invoke(code: String): Result<OpenFoodFactsInfo?> {
             return repository.fetchProduit(code)
         }
     }

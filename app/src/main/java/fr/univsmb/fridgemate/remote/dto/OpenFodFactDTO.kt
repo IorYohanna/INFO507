@@ -1,7 +1,6 @@
 package fr.univsmb.fridgemate.remote.dto
 
 import fr.univsmb.fridgemate.domain.data.Nutriscore
-import fr.univsmb.fridgemate.model.ProduitInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -31,7 +30,7 @@ data class OpenFoodFactsProductDto(
     val quantity: String? = null
 )
 
-fun OpenFoodFactsProductDto.toProduitInfo(code: String) = ProduitInfo(
+fun OpenFoodFactsProductDto.toProduitInfo(code: String) = OpenFoodFactsInfo(
     code = code,
     nom = productName?.takeIf { it.isNotBlank() } ?: "Produit inconnu",
     marque = brands?.substringBefore(",")?.trim(),

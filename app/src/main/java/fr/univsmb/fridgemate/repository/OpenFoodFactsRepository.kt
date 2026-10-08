@@ -1,6 +1,6 @@
 package fr.univsmb.fridgemate.repository
 
-import fr.univsmb.fridgemate.model.ProduitInfo
+import fr.univsmb.fridgemate.remote.dto.OpenFoodFactsInfo
 import fr.univsmb.fridgemate.remote.api.OpenFoodFactApi
 import fr.univsmb.fridgemate.remote.dto.toProduitInfo
 import io.ktor.client.plugins.ResponseException
@@ -11,7 +11,7 @@ import kotlinx.serialization.SerializationException
 class OpenFoodFactRepository(
     private val api: OpenFoodFactApi = OpenFoodFactApi
 ) {
-    suspend fun fetchProduit(code: String): Result<ProduitInfo?> = try {
+    suspend fun fetchProduit(code: String): Result<OpenFoodFactsInfo?> = try {
         val response = api.fetchProductDetail(code)
         Result.success(
             if (response.status == 1) response.product?.toProduitInfo(code) else null
