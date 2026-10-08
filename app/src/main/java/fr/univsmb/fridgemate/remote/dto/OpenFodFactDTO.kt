@@ -1,5 +1,7 @@
 package fr.univsmb.fridgemate.remote.dto
 
+import fr.univsmb.fridgemate.domain.data.Nutriscore
+import fr.univsmb.fridgemate.model.ProduitInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -20,8 +22,28 @@ data class OpenFoodFactsProductDto(
     @SerialName("nutriscore_grade")
     val nutriscoreGrade: String? = null,
 
-    @SerialName("image_front_url")
+    @SerialName("image_url")
     val imageUrl: String? = null,
 
-    val categories: String? = null
+    @SerialName("categories_tags_fr")
+    val categoriesTags: List<String>? = null,
+
+    val quantity: String? = null
+)
+
+fun OpenFoodFactsProductDto.toProduitInfo(code: String) = ProduitInfo(
+    code = code,
+    nom = productName?.takeIf { it.isNotBlank() } ?: "Produit inconnu",
+    marque = brands?.substringBefore(",")?.trim(),
+    categorie = categoriesTags?.firstOrNull { !it.contains(":") },
+    imageUrl = imageUrl,
+    quantity = quantity,
+    nutriscore = when (nutriscoreGrade?.lowercase()) {
+        "a" -> Nutriscore.A
+        "b" -> Nutriscore.B
+        "c" -> Nutriscore.C
+        "d" -> Nutriscore.D
+        "e" -> Nutriscore.E
+        else -> Nutriscore.UNKOWN
+    }
 )

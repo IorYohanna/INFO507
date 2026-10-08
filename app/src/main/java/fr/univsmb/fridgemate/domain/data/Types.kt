@@ -1,11 +1,7 @@
 package fr.univsmb.fridgemate.domain.data
 
-enum class Nutriscore(val raw : String) {
-    A("A"),
-    B("B"),
-    C("C"),
-    D("D"),
-    E("E") //955
+enum class Nutriscore {
+    A,B,C,D,E,UNKOWN
 }
 
 enum class Statut(val raw : String) {

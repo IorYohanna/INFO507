@@ -1,6 +1,8 @@
     package fr.univsmb.fridgemate.domain.usecase
 
+    import fr.univsmb.fridgemate.model.ProduitInfo
     import fr.univsmb.fridgemate.model.ProduitModel
+    import fr.univsmb.fridgemate.repository.OpenFoodFactRepository
     import fr.univsmb.fridgemate.repository.ProduitRepository
     import kotlinx.coroutines.flow.Flow
 
@@ -41,5 +43,13 @@
     ) {
         suspend operator fun invoke(produit: ProduitModel) {
             repository.upsertProduit(produit)
+        }
+    }
+
+    class FetchProductInfoUseCase(
+        private val repository: OpenFoodFactRepository
+    ) {
+        suspend operator fun invoke(code: String): Result<ProduitInfo?> {
+            return repository.fetchProduit(code)
         }
     }
