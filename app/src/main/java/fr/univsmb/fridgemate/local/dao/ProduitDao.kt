@@ -30,7 +30,7 @@ interface ProduitDao {
     @Query("UPDATE produit SET nombre = nombre - 1 WHERE code = :code AND nombre > 1")
     suspend fun retirerUn(code: String)
 
-    @Query("DELETE FROM produit WHERE code = :code AND nombre <= 1")
+    @Query("DELETE FROM produit WHERE code = :code AND nombre < 1")
     suspend fun supprimerSiDernier(code: String)
 
     @Query("DELETE FROM produit WHERE code = :code")
