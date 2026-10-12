@@ -51,7 +51,7 @@ fun calculerStatut(dateExpiration: String): Statut {
     val jours = ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(dateExpiration))
     return when {
         jours < 0 -> Statut.Perime
-        jours <= 3 -> Statut.BPerime
+        jours <= 7 -> Statut.BPerime
         else -> Statut.Frais
     }
 }
