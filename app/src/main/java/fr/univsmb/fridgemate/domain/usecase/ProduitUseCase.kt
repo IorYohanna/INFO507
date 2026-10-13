@@ -1,3 +1,4 @@
+
     package fr.univsmb.fridgemate.domain.usecase
 
     import android.util.Log

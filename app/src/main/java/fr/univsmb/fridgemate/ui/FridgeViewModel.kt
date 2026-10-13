@@ -76,6 +76,10 @@ class FridgeViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun resetAjout() {
+        _add.value = AddUiState()
+    }
+
     fun ajouter(
         nombre: Int,
         dateExpiration: String,

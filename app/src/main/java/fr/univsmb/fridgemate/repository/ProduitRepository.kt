@@ -38,8 +38,7 @@ class ProduitRepository(
         }
     }
     suspend fun consommerUn(code: String) {
-        produitDao.retirerUn(code)
-        produitDao.supprimerSiDernier(code)
+        produitDao.consommerUn(code)
     }
 
     suspend fun supprimerProduitByCode(code: String) = produitDao.deleteProduitByCode(code)

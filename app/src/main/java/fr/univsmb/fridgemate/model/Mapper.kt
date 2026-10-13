@@ -55,3 +55,16 @@ fun calculerStatut(dateExpiration: String): Statut {
         else -> Statut.Frais
     }
 }
+
+fun joursRestants(dateExpiration: String): Long =
+    ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(dateExpiration))
+
+fun texteExpiration(dateExpiration: String): String {
+    val j = joursRestants(dateExpiration)
+    return when {
+        j < 0 -> "Périmé depuis ${-j} j"
+        j == 0L -> "Expire aujourd'hui"
+        j == 1L -> "Expire demain"
+        else -> "Expire dans $j jours"
+    }
+}

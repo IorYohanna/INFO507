@@ -33,8 +33,13 @@ data class OpenFoodFactsProductDto(
 fun OpenFoodFactsProductDto.toOpenFoodFactsInfo(code: String) = OpenFoodFactsInfo(
     code = code,
     nom = productName?.takeIf { it.isNotBlank() } ?: "Produit inconnu",
-    marque = brands?.substringBefore(",")?.trim(),
-    categorie = categoriesTags?.firstOrNull { !it.contains(":") },
+    marque = brands?.trim()?.takeIf { it.isNotBlank() },
+    categorie = categoriesTags
+        ?.map { it.substringAfter(':').replace('-', ' ').trim() }
+        ?.filter { it.isNotBlank() }
+        ?.distinct()
+        ?.joinToString(", ")
+        ?.takeIf { it.isNotBlank() },
     imageUrl = imageUrl,
     nutriscore = when (nutriscoreGrade?.lowercase()) {
         "a" -> Nutriscore.A

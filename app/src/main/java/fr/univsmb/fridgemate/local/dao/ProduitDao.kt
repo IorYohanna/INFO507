@@ -2,6 +2,7 @@ package fr.univsmb.fridgemate.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import fr.univsmb.fridgemate.domain.data.Statut
 import fr.univsmb.fridgemate.local.entity.ProduitEntity
@@ -32,6 +33,13 @@ interface ProduitDao {
 
     @Query("DELETE FROM produit WHERE code = :code AND nombre <= 1")
     suspend fun supprimerSiDernier(code: String)
+
+    @Transaction
+    suspend fun consommerUn(code: String) {
+        // Supprimer le dernier exemplaire avant de diminuer les autres stocks.
+        supprimerSiDernier(code)
+        retirerUn(code)
+    }
 
     @Query("DELETE FROM produit WHERE code = :code")
     suspend fun deleteProduitByCode(code: String)
