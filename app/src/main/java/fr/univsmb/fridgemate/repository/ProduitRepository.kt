@@ -12,17 +12,9 @@ class ProduitRepository(
     fun getAllProduits(): Flow<List<ProduitModel>> =
         produitDao.getAllProduits().map { list -> list.map { it.toProduitModel() } }
 
-    suspend fun getProduitByCode(code: String): ProduitModel? =
-        produitDao.getProduitByCode(code)?.toProduitModel()
-
     suspend fun upsertProduit(produit: ProduitModel) {
         produitDao.upsertProduit(ProduitEntity.fromProduitModel(produit))
     }
-
-    suspend fun getProduitsANotifier(limite: String): List<ProduitModel> =
-        produitDao.getProduitsANotifier(limite).map { it.toProduitModel() }
-
-    suspend fun marquerNotifie(code: String) = produitDao.marquerNotifie(code)
     suspend fun consommerUn(code: String) {
         produitDao.consommerUn(code)
     }

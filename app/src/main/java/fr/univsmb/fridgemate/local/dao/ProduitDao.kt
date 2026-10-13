@@ -36,7 +36,6 @@ interface ProduitDao {
 
     @Transaction
     suspend fun consommerUn(code: String) {
-        // Supprimer le dernier exemplaire avant de diminuer les autres stocks.
         supprimerSiDernier(code)
         retirerUn(code)
     }

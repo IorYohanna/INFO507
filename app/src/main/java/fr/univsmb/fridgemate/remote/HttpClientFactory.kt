@@ -35,7 +35,7 @@ object HttpClientFactory {
             }
 
             install(UserAgent) {
-                agent = "FridgeMate/1.0 nanajounchan@gmail.com"
+                agent = "FridgeMate/1.0"
             }
 
             install(HttpTimeout) {
