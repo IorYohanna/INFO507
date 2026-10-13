@@ -22,6 +22,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
+import fr.univsmb.fridgemate.notifications.ExpirationWorker
+
 
 data class AddUiState(
     val code: String = "",
@@ -52,25 +54,48 @@ class FridgeViewModel(app: Application) : AndroidViewModel(app) {
     private val _add = MutableStateFlow(AddUiState())
     val add: StateFlow<AddUiState> = _add.asStateFlow()
 
-    fun onCodeChange(code: String) = _add.update { it.copy(code = code, message = null) }
+    fun onCodeChange(code: String) {
+        _add.update {
+            it.copy(
+                code = code,
+                info = null,
+                message = null
+            )
+        }
+    }
 
     fun rechercher() {
         val code = _add.value.code.trim()
         if (code.isEmpty()) return
+
         viewModelScope.launch {
-            _add.update { it.copy(loading = true, info = null, message = null) }
+            _add.update {
+                it.copy(
+                    loading = true,
+                    info = null,
+                    message = null
+                )
+            }
+
             fetchInfo(code).fold(
                 onSuccess = { info ->
                     _add.update {
                         it.copy(
                             loading = false,
                             info = info,
-                            message = if (info == null) "Produit introuvable dans Open Food Facts" else null
+                            message = if (info == null)
+                                "Produit introuvable dans Open Food Facts"
+                            else null
                         )
                     }
                 },
-                onFailure = { e ->
-                    _add.update { it.copy(loading = false, message = "Erreur réseau : ${e.message}") }
+                onFailure = { error ->
+                    _add.update {
+                        it.copy(
+                            loading = false,
+                            message = "Erreur réseau : ${error.message}"
+                        )
+                    }
                 }
             )
         }
@@ -88,21 +113,38 @@ class FridgeViewModel(app: Application) : AndroidViewModel(app) {
         val info = _add.value.info ?: return
 
         if (nombre <= 0) {
-            _add.update { it.copy(message = "Le nombre doit être supérieur à 0") }
+            _add.update {
+                it.copy(
+                    message = "Le nombre doit être supérieur à 0"
+                )
+            }
             return
         }
+
         val date = try {
             LocalDate.parse(dateExpiration.trim()).toString()
         } catch (e: DateTimeParseException) {
-            _add.update { it.copy(message = "Date invalide (format attendu : yyyy-MM-dd)") }
+            _add.update {
+                it.copy(message = "Date d'expiration invalide")
+            }
             return
         }
 
         viewModelScope.launch {
-            addOrIncrement(info.toProduitModel(nombre, date))
+            addOrIncrement(
+                info.toProduitModel(nombre, date)
+            )
+
+            ExpirationWorker.checkNow(getApplication())
+
             _add.value = AddUiState()
             onSuccess()
         }
+    }
+
+    fun modifier(produit: ProduitModel) = viewModelScope.launch {
+        upsert(produit)
+        ExpirationWorker.checkNow(getApplication())
     }
 
     fun consommerUn(code: String) = viewModelScope.launch { consumeOne(code) }
@@ -111,5 +153,4 @@ class FridgeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun toutSupprimer() = viewModelScope.launch { deleteAll() }
 
-    fun modifier(produit: ProduitModel) = viewModelScope.launch { upsert(produit) }
 }

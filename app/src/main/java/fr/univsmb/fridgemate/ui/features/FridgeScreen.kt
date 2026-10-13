@@ -36,6 +36,8 @@ fun FridgeScreen(
     modifier: Modifier = Modifier
 ) {
     val produits by vm.produits.collectAsState()
+    var selectedCode by remember { mutableStateOf<String?>(null) }
+    val selectedProduct = produits.firstOrNull { it.code == selectedCode }
     var recherche by remember { mutableStateOf("") }
     var filtre by remember { mutableStateOf("Tous") }
     val filtres = listOf("Tous", "Légumes", "Viandes", "Laitiers")
@@ -121,7 +123,7 @@ fun FridgeScreen(
             items(visibles, key = { it.code }) { p ->
                 var menuOuvert by remember { mutableStateOf(false) }
                 Card(
-                    modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(15.dp),
+                    modifier = Modifier.fillMaxWidth().clickable { selectedCode = p.code }, shape = RoundedCornerShape(15.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
@@ -161,6 +163,16 @@ fun FridgeScreen(
                     }
                 }
             }
+        }
+        selectedProduct?.let { produit ->
+            ProductDetailsSheet(
+                produit = produit,
+                onDismiss = { selectedCode = null },
+                onModifier = {
+                    selectedCode = null
+                    onModifier(produit.code)
+                }
+            )
         }
         ExtendedFloatingActionButton(
             onClick = onAjouter, modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),

@@ -59,7 +59,6 @@ fun AddProductScreen(
         vm.resetAjout()
     }
 
-    // Scanner Google Code Scanner
     val scanner = remember(context) {
         val options = GmsBarcodeScannerOptions.Builder()
             .setBarcodeFormats(
@@ -177,7 +176,6 @@ fun AddProductScreen(
 
         Spacer(Modifier.height(25.dp))
 
-        // Carte du scanner
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = SoftGreen
@@ -267,7 +265,6 @@ fun AddProductScreen(
             }
         }
 
-        // Recherche manuelle optionnelle
         if (showManual) {
             Spacer(Modifier.height(14.dp))
 
@@ -329,7 +326,6 @@ fun AddProductScreen(
             }
         }
 
-        // Formulaire après reconnaissance du produit
         add.info?.let { info ->
             Spacer(Modifier.height(24.dp))
 

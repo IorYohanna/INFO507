@@ -1,5 +1,5 @@
 
-package fr.univsmb.fridgemate.ui.features
+package fr.univsmb.fridgemate.notifications
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -29,7 +29,6 @@ class ExpirationWorker(
         return try {
             val context = applicationContext
 
-            // Canal de notifications
             val manager = context.getSystemService(
                 NotificationManager::class.java
             )
@@ -44,8 +43,6 @@ class ExpirationWorker(
                         "Rappels des aliments arrivant à expiration"
                 }
             )
-
-            // Permission Android 13+
             if (
                 Build.VERSION.SDK_INT >= 33 &&
                 ContextCompat.checkSelfPermission(
@@ -58,8 +55,6 @@ class ExpirationWorker(
 
             val dao = ProduitDatabase.get(context).produitDao()
             val today = LocalDate.now()
-
-            // Tous les produits expirant dans les 7 jours
             val products = dao.getProduitsANotifier(
                 today.plusDays(7).toString()
             )

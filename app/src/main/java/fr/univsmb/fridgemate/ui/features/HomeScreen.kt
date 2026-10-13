@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,7 +22,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.Kitchen
 import androidx.compose.material.icons.outlined.Restaurant
@@ -38,6 +38,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import java.time.LocalDate
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,10 +70,16 @@ fun HomeScreen(
     vm: FridgeViewModel,
     onVoirFrigo: () -> Unit,
     onAjouter: () -> Unit,
-    modifier: Modifier = Modifier,
-    nomUtilisateur: String = "Chriskely"
+    modifier: Modifier = Modifier
 ) {
     val produits by vm.produits.collectAsState()
+    var notificationsOuvertes by remember { mutableStateOf(false) }
+    var selectedAlertCode by remember { mutableStateOf<String?>(null) }
+    val limite = LocalDate.now().plusDays(7)
+    val alertes = produits.filter { produit ->
+        val expiration = runCatching { LocalDate.parse(produit.date_expiration) }.getOrNull()
+        expiration != null && !expiration.isAfter(limite)
+    }.sortedBy { it.date_expiration }
 
     // Le ViewModel a déjà recalculé le statut et trie par date d'expiration
     val frais = produits.count { it.statut == Statut.Frais }
@@ -77,23 +87,24 @@ fun HomeScreen(
     val urgents = produits.filter { it.statut != Statut.Frais }
     val recents = produits.sortedByDescending { it.date_ajout }.take(2)
 
+    Box(modifier = modifier.fillMaxSize()) {
     LazyColumn(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 12.dp, bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        item { HomeHeader(hasAlert = urgents.isNotEmpty(), onBellClick = onVoirFrigo) }
+        item { HomeHeader(hasAlert = alertes.isNotEmpty(), onBellClick = { notificationsOuvertes = true }) }
 
         item {
             Column {
                 Text(
-                    "Bonjour, $nomUtilisateur",
-                    fontFamily = FontFamily.Cursive,
+                    "Bonjour 👋",
+                    fontFamily = FontFamily.Serif,
                     fontSize = 27.sp,
                     color = VertFonce
                 )
                 Text(
-                    "On cuisine quoi aujourd’hui ?",
+                    "Qu'est ce qu'il ya dans ton frigo?",
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -120,7 +131,7 @@ fun HomeScreen(
 
         item { UrgentCard(urgents = urgents, onVoirFrigo = onVoirFrigo) }
 
-        item { AddCard(onClick = onVoirFrigo) }
+        item { AddCard(onClick = onAjouter) }
 
         if (recents.isNotEmpty()) {
             item {
@@ -141,44 +152,42 @@ fun HomeScreen(
             }
         }
     }
+    if (notificationsOuvertes) {
+        NotificationsSheet(
+            produits = alertes,
+            onDismiss = { notificationsOuvertes = false },
+            onProductClick = { code ->
+                notificationsOuvertes = false
+                selectedAlertCode = code
+            }
+        )
+    }
+    }
+    produits.firstOrNull { it.code == selectedAlertCode }?.let { produit ->
+        ProductDetailsSheet(
+            produit = produit,
+            onDismiss = { selectedAlertCode = null },
+            onModifier = { selectedAlertCode = null; onVoirFrigo() }
+        )
+    }
 }
 
 @Composable
 private fun HomeHeader(hasAlert: Boolean, onBellClick: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-            Icon(Icons.Outlined.Kitchen, contentDescription = null, tint = VertFonce, modifier = Modifier.size(29.dp))
-            Text("FridgeMate", fontWeight = FontWeight.ExtraBold, fontSize = 19.sp, color = VertFonce)
-        }
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box {
-                IconButton(onClick = onBellClick) {
-                    Icon(Icons.Filled.Notifications, contentDescription = "Alertes", tint = VertFonce)
-                }
-                if (hasAlert) {
-                    Box(
-                        Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(top = 10.dp, end = 10.dp)
-                            .size(9.dp)
-                            .clip(CircleShape)
-                            .background(Ambre)
-                    )
-                }
+        Box {
+            IconButton(onClick = onBellClick) {
+                Icon(Icons.Filled.Notifications, contentDescription = "Mes alertes", tint = VertFonce)
             }
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(VertFonce),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(Icons.Filled.Person, contentDescription = "Profil", tint = Color.White)
+            if (hasAlert) {
+                Box(
+                    Modifier.align(Alignment.TopEnd).padding(top = 6.dp, end = 6.dp)
+                        .size(9.dp).clip(CircleShape).background(Ambre)
+                )
             }
         }
     }

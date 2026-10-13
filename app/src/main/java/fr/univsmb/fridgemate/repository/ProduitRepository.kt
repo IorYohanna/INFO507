@@ -23,20 +23,6 @@ class ProduitRepository(
         produitDao.getProduitsANotifier(limite).map { it.toProduitModel() }
 
     suspend fun marquerNotifie(code: String) = produitDao.marquerNotifie(code)
-
-    suspend fun ajouterOuIncrementer(produit: ProduitModel) {
-        val existant = produitDao.getProduitByCode(produit.code)
-        if (existant == null) {
-            produitDao.upsertProduit(ProduitEntity.fromProduitModel(produit))
-        } else {
-            produitDao.upsertProduit(
-                existant.copy(
-                    nombre = existant.nombre + produit.nombre,
-                    date_expiration = minOf(existant.date_expiration, produit.date_expiration)
-                )
-            )
-        }
-    }
     suspend fun consommerUn(code: String) {
         produitDao.consommerUn(code)
     }
@@ -44,4 +30,30 @@ class ProduitRepository(
     suspend fun supprimerProduitByCode(code: String) = produitDao.deleteProduitByCode(code)
 
     suspend fun supprimerTousLesProduits() = produitDao.deleteAllProduits()
+
+
+    suspend fun ajouterOuIncrementer(produit: ProduitModel) {
+        val existant = produitDao.getProduitByCode(produit.code)
+
+        if (existant == null) {
+            produitDao.upsertProduit(
+                ProduitEntity.fromProduitModel(produit)
+            )
+        } else {
+            produitDao.upsertProduit(
+                existant.copy(
+                    nombre = existant.nombre + produit.nombre,
+                    date_expiration = minOf(
+                        existant.date_expiration,
+                        produit.date_expiration
+                    ),
+                    notifie = if (
+                        produit.date_expiration <
+                        existant.date_expiration
+                    ) false else existant.notifie
+                )
+            )
+        }
+    }
+
 }
