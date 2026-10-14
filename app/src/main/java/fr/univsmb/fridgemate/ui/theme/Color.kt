@@ -8,3 +8,5 @@ val SoftGreen = Color(0xFFE8F4E9)
 val Cream = Color(0xFFFFF3DF)
 val Amber = Color(0xFFBE6D0D)
 val OffWhite = Color(0xFFFAFCF9)
+
+val LightRed = Color(0xFFD2D2)

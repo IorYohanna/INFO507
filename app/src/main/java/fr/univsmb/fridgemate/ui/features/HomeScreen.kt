@@ -81,7 +81,6 @@ fun HomeScreen(
         expiration != null && !expiration.isAfter(limite)
     }.sortedBy { it.date_expiration }
 
-    // Le ViewModel a déjà recalculé le statut et trie par date d'expiration
     val frais = produits.count { it.statut == Statut.Frais }
     val aUtiliserVite = produits.count { it.statut == Statut.BPerime }
     val urgents = produits.filter { it.statut != Statut.Frais }
@@ -131,7 +130,7 @@ fun HomeScreen(
 
         item { UrgentCard(urgents = urgents, onVoirFrigo = onVoirFrigo) }
 
-        item { AddCard(onClick = onAjouter) }
+        item { AddCard(onClick = onVoirFrigo) }
 
         if (recents.isNotEmpty()) {
             item {
@@ -296,9 +295,9 @@ private fun AddCard(onClick: () -> Unit) {
             Icon(Icons.Outlined.Restaurant, contentDescription = null, tint = Color(0xFFF5B46F), modifier = Modifier.size(38.dp))
             Spacer(Modifier.size(12.dp))
             Column(Modifier.weight(1f)) {
-                Text("Que puis-je cuisiner ?", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text("Qu'est ce qu'il y a dans le frigo ?", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Text(
-                    "Des idées avec ce que tu as.",
+                    "Verifie ce qu'il y a ",
                     color = Color.White.copy(alpha = 0.75f),
                     fontSize = 13.sp
                 )
