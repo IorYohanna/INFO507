@@ -32,7 +32,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-private val FieldShape = RoundedCornerShape(17.dp)
+val FieldShape = RoundedCornerShape(17.dp)
 private val BorderColor = Color(0xFFE1E9E3)
 
 @Composable
