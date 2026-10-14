@@ -1,6 +1,6 @@
 package fr.univsmb.fridgemate.ui.features
 
-import android.R
+import fr.univsmb.fridgemate.R
 import android.app.DatePickerDialog
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -72,8 +73,8 @@ fun EditProductScreen(
 
     if (produit == null) {
         Column(modifier.padding(16.dp)) {
-            Text("Produit introuvable.")
-            Button(onClick = onDone) { Text("Retour") }
+            Text(stringResource(id=R.string.product_not_found))
+            Button(onClick = onDone) { Text(stringResource(id = R.string.back)) }
         }
     } else {
         Column(
@@ -81,10 +82,10 @@ fun EditProductScreen(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onDone) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Retour")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(id = R.string.back))
                 }
                 Text(
-                    "Modifier le produit",
+                    stringResource(id = R.string.edit_product),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -111,7 +112,7 @@ fun EditProductScreen(
                         fontWeight = FontWeight.Bold,
                         color = VertFonce
                     )
-                    Text("Contenance : ${produit.quantite} ${produit.unite.raw}")
+                    Text("${stringResource(R.string.contenance)} : ${produit.quantite} ${produit.unite.raw}")
                     Text(produit.marque.orEmpty().ifBlank { "Marque inconnue" }, color = Color.Gray)
                     StatutChip(produit.statut)
                 }
@@ -154,7 +155,7 @@ private fun EditForm(
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Nombre : ")
+            Text("${stringResource(id = R.string.number)} : ")
             OutlinedButton(onClick = { if (nombre > 1) nombre-- }) { Text("-") }
             Text("$nombre", modifier = Modifier.padding(horizontal = 16.dp))
             OutlinedButton(onClick = { nombre++ }) { Text("+") }
@@ -215,6 +216,6 @@ private fun EditForm(
                 )
             )
             onDone()
-        }) { Text("Enregistrer") }
+        }) { Text(stringResource(id = R.string.save)) }
     }
 }
