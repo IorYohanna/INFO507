@@ -60,7 +60,6 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Locale
 
-fun f(){}
 @Composable
 fun EditProductScreen(
     vm: FridgeViewModel,
