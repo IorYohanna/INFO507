@@ -511,30 +511,6 @@ fun AddProductScreen(
                 )
             }
 
-            Spacer(Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Cream, FieldShape)
-                    .padding(14.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Default.NotificationsActive,
-                    contentDescription = null,
-                    tint = Amber
-                )
-
-                Spacer(Modifier.width(10.dp))
-
-                Text(
-                    "Rappel automatique une semaine avant la date d'expiration.",
-                    color = Color(0xFF8C5A16),
-                    fontSize = 12.sp
-                )
-            }
-
             Spacer(Modifier.height(24.dp))
 
             Button(

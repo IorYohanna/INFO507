@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.*
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import fr.univsmb.fridgemate.domain.data.Statut
 import fr.univsmb.fridgemate.model.ProduitModel
 import fr.univsmb.fridgemate.model.texteExpiration
+import fr.univsmb.fridgemate.ui.theme.LightRed
 
 @Composable
 fun FridgeScreen(
@@ -113,9 +115,20 @@ fun FridgeScreen(
                     }
                 }
             }
-            item {
-                Text("Triés par date d’expiration", fontSize = 12.sp, color = Color(0xFF849087),
-                    modifier = Modifier.padding(top = 4.dp))
+            if (produits.isNotEmpty()) {
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp))
+                            .background(LightRed),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Outlined.Delete, null, tint = LightRed, modifier = Modifier.size(2.dp))
+                        TextButton(onClick = vm::toutSupprimer) {
+                            Text("Vider le frigo", color = Ambre)
+                        }
+                    }
+
+                }
             }
             if (visibles.isEmpty()) {
                 item { Text("Aucun aliment trouvé.", color = Color.Gray, modifier = Modifier.padding(20.dp)) }
@@ -153,13 +166,6 @@ fun FridgeScreen(
                                 DropdownMenuItem(text = { Text("Supprimer") }, onClick = { menuOuvert = false; vm.supprimer(p.code) })
                             }
                         }
-                    }
-                }
-            }
-            if (produits.isNotEmpty()) {
-                item {
-                    TextButton(onClick = vm::toutSupprimer, modifier = Modifier.fillMaxWidth()) {
-                        Text("Vider le frigo", color = Ambre)
                     }
                 }
             }
