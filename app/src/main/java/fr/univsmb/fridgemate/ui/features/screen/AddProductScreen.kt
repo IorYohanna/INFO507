@@ -1,5 +1,4 @@
-
-package fr.univsmb.fridgemate.ui.features
+package fr.univsmb.fridgemate.ui.features.screen
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.*

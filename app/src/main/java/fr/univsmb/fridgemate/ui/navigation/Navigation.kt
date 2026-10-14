@@ -31,8 +31,8 @@ import androidx.navigation.navArgument
 import fr.univsmb.fridgemate.ui.FridgeScreen
 import fr.univsmb.fridgemate.ui.FridgeViewModel
 import fr.univsmb.fridgemate.ui.HomeScreen
-import fr.univsmb.fridgemate.ui.features.AddProductScreen
-import fr.univsmb.fridgemate.ui.features.EditProductScreen
+import fr.univsmb.fridgemate.ui.features.screen.AddProductScreen
+import fr.univsmb.fridgemate.ui.features.screen.EditProductScreen
 
 @Composable
 fun AppNavigation(

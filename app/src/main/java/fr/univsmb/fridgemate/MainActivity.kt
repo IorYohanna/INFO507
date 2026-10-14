@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import fr.univsmb.fridgemate.notifications.ExpirationWorker
 import fr.univsmb.fridgemate.ui.FridgeViewModel
 import fr.univsmb.fridgemate.ui.features.EditProductScreen
+import fr.univsmb.fridgemate.ui.features.f
 import fr.univsmb.fridgemate.ui.navigation.AppNavigation
 import fr.univsmb.fridgemate.ui.theme.FridgeMateTheme
 
